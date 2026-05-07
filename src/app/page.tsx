@@ -1349,10 +1349,62 @@ export default function BeachPropertyPage() {
         </div>
       </section>
 
+      {/* MHD Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* MHD Logo */}
+              <div className="flex justify-center">
+                <div className="relative w-64 h-64 md:w-80 md:h-80">
+                  <Image
+                    src="/images/mhd-logo.png"
+                    alt="MHD Logo"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+
+              {/* MHD Info */}
+              <div>
+                <Badge variant="outline" className="mb-4 border-cyan-500 text-cyan-600">Contact Person</Badge>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  MHD Design-Build
+                </h2>
+                <p className="text-lg text-muted-foreground mb-6">
+                  <strong>MHD</strong> has been a pioneer in the Philippine construction industry since 1997, 
+                  specializing in <strong>Design-Build by Administration</strong> services. We bring decades 
+                  of expertise in creating exceptional properties that stand the test of time.
+                </p>
+                <div className="bg-gradient-to-r from-cyan-50 to-teal-50 rounded-xl p-6 border border-cyan-100">
+                  <h3 className="font-semibold text-gray-900 mb-3">Our Legacy</h3>
+                  <p className="text-muted-foreground text-sm mb-4">
+                    In 1997, MHD completed the Design-Build by Administration of this Bilandang Beach Property, 
+                    bringing vision to reality with Spanish Mediterranean architecture that captures the 
+                    essence of tropical paradise living.
+                  </p>
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-cyan-600" />
+                      <span className="font-medium">+63 997 175 9641</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-cyan-600" />
+                      <span className="font-medium">mhd.architect2020@gmail.com</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16 mt-auto">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid md:grid-cols-4 gap-12">
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center">
@@ -1373,11 +1425,11 @@ export default function BeachPropertyPage() {
               <div className="space-y-3 text-gray-400">
                 <div className="flex items-center gap-3">
                   <Phone className="w-4 h-4 text-cyan-400" />
-                  <span>(+63) 917 980 17 02</span>
+                  <span>(+63) 997 175 9641</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-cyan-400" />
-                  <span>jlkooring@hotmail.com</span>
+                  <span>mhd.architect2020@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <MapPin className="w-4 h-4 text-cyan-400" />
@@ -1409,6 +1461,19 @@ export default function BeachPropertyPage() {
                   <span className="text-white">80%</span>
                 </div>
               </div>
+            </div>
+            <div>
+              <div className="relative w-32 h-32 mb-4">
+                <Image
+                  src="/images/mhd-logo.png"
+                  alt="MHD Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <p className="text-gray-400 text-sm">
+                Design-Build by Administration since 1997. Creating exceptional properties in the Philippines.
+              </p>
             </div>
           </div>
           <Separator className="my-8 bg-gray-800" />
