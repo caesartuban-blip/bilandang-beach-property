@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { motion, useInView, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -49,7 +50,78 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 
-// Property data
+// ============================================
+// Animation Variants
+// ============================================
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }
+  }
+}
+
+const fadeIn: Variants = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1,
+    transition: { duration: 0.6, ease: 'easeOut' }
+  }
+}
+
+const fadeInLeft: Variants = {
+  hidden: { opacity: 0, x: -40 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }
+  }
+}
+
+const fadeInRight: Variants = {
+  hidden: { opacity: 0, x: 40 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }
+  }
+}
+
+const scaleIn: Variants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }
+  }
+}
+
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
+  }
+}
+
+const staggerItem: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5, ease: 'easeOut' }
+  }
+}
+
+// ============================================
+// Property Data
+// ============================================
+
 const propertyData = {
   name: "Bilandang Beach Property",
   location: "Brgy. Taluya, Glan, Sarangani Province, Philippines",
@@ -281,6 +353,43 @@ export default function BeachPropertyPage() {
     message: ''
   })
 
+  // Refs for scroll-triggered animations
+  const statsRef = useRef<HTMLDivElement>(null)
+  const statsInView = useInView(statsRef, { once: true, margin: "-100px" })
+  
+  const propertyOverviewRef = useRef<HTMLDivElement>(null)
+  const propertyOverviewInView = useInView(propertyOverviewRef, { once: true, margin: "-100px" })
+  
+  const buildingsRef = useRef<HTMLDivElement>(null)
+  const buildingsInView = useInView(buildingsRef, { once: true, margin: "-100px" })
+  
+  const galleryRef = useRef<HTMLDivElement>(null)
+  const galleryInView = useInView(galleryRef, { once: true, margin: "-100px" })
+  
+  const potentialRef = useRef<HTMLDivElement>(null)
+  const potentialInView = useInView(potentialRef, { once: true, margin: "-100px" })
+  
+  const amenitiesRef = useRef<HTMLDivElement>(null)
+  const amenitiesInView = useInView(amenitiesRef, { once: true, margin: "-100px" })
+  
+  const completionRef = useRef<HTMLDivElement>(null)
+  const completionInView = useInView(completionRef, { once: true, margin: "-100px" })
+  
+  const possibleUsesRef = useRef<HTMLDivElement>(null)
+  const possibleUsesInView = useInView(possibleUsesRef, { once: true, margin: "-100px" })
+  
+  const legalRef = useRef<HTMLDivElement>(null)
+  const legalInView = useInView(legalRef, { once: true, margin: "-100px" })
+  
+  const pricingRef = useRef<HTMLDivElement>(null)
+  const pricingInView = useInView(pricingRef, { once: true, margin: "-100px" })
+  
+  const locationRef = useRef<HTMLDivElement>(null)
+  const locationInView = useInView(locationRef, { once: true, margin: "-100px" })
+  
+  const contactRef = useRef<HTMLDivElement>(null)
+  const contactInView = useInView(contactRef, { once: true, margin: "-100px" })
+
   const filteredImages = selectedCategory 
     ? galleryCategories.find(cat => cat.name === selectedCategory)?.images || []
     : allImages
@@ -321,10 +430,15 @@ export default function BeachPropertyPage() {
             </Badge>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Contact Us
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white">
+                    <Mail className="w-4 h-4 mr-2" />
+                    Contact Us
+                  </Button>
+                </motion.div>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -397,58 +511,112 @@ export default function BeachPropertyPage() {
         
         <div className="relative h-full container mx-auto px-4 flex flex-col justify-end pb-20">
           <div className="max-w-3xl">
-            <div className="flex gap-2 mb-4">
-              <Badge className="bg-white/20 backdrop-blur-md text-white border-white/30">
-                <MapPin className="w-3 h-3 mr-1" />
-                Sarangani Province, Philippines
-              </Badge>
-              <Badge className="bg-amber-500 text-white border-0">
-                <Award className="w-3 h-3 mr-1" />
-                Governor Endorsed
-              </Badge>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
+            {/* Badges with staggered animation */}
+            <motion.div 
+              className="flex gap-2 mb-4"
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+            >
+              <motion.div variants={staggerItem}>
+                <Badge className="bg-white/20 backdrop-blur-md text-white border-white/30">
+                  <MapPin className="w-3 h-3 mr-1" />
+                  Sarangani Province, Philippines
+                </Badge>
+              </motion.div>
+              <motion.div variants={staggerItem}>
+                <Badge className="bg-amber-500 text-white border-0">
+                  <Award className="w-3 h-3 mr-1" />
+                  Governor Endorsed
+                </Badge>
+              </motion.div>
+            </motion.div>
+            
+            {/* Main title with fade-in and slide-up */}
+            <motion.h1 
+              className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight"
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
+            >
               Bilandang Beach Property
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300 text-3xl md:text-4xl mt-2">
+              <motion.span 
+                className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300 text-3xl md:text-4xl mt-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+              >
                 12.3 Hectares of Paradise
-              </span>
-            </h1>
-            <p className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl">
+              </motion.span>
+            </motion.h1>
+            
+            {/* Description with fade-in */}
+            <motion.p 
+              className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+            >
               A stunning beach property along the Celebes Sea, featuring Spanish Mediterranean 
               architecture, 240 meters of pristine white sand beach, and crystal-clear waters 
               with vibrant coral reefs.
-            </p>
-            <div className="flex flex-wrap gap-4 mb-8">
-              <div className="bg-white/20 backdrop-blur-md rounded-lg px-4 py-2 text-white">
-                <span className="font-semibold">PHP {propertyData.pricePerSqm.toLocaleString()}</span>
-                <span className="text-white/80 text-sm ml-1">/ sqm</span>
-              </div>
-              <div className="bg-white/20 backdrop-blur-md rounded-lg px-4 py-2 text-white">
-                <span className="font-semibold">{propertyData.totalArea.hectares} hectares</span>
-                <span className="text-white/80 text-sm ml-1">({propertyData.totalArea.acres} acres)</span>
-              </div>
-              <div className="bg-white/20 backdrop-blur-md rounded-lg px-4 py-2 text-white">
-                <span className="font-semibold">{propertyData.completion}%</span>
-                <span className="text-white/80 text-sm ml-1">completed</span>
-              </div>
-              <div className="bg-emerald-500/80 backdrop-blur-md rounded-lg px-4 py-2 text-white">
-                <span className="font-semibold">3 Titled Lots</span>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <Button 
-                size="lg" 
-                onClick={() => setShowGallery(true)}
-                className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white text-lg px-8"
+            </motion.p>
+            
+            {/* Stats boxes with slide-up animation */}
+            <motion.div 
+              className="flex flex-wrap gap-4 mb-8"
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+            >
+              {[
+                { label: `PHP ${propertyData.pricePerSqm.toLocaleString()}`, suffix: '/ sqm' },
+                { label: `${propertyData.totalArea.hectares} hectares`, suffix: `(${propertyData.totalArea.acres} acres)` },
+                { label: `${propertyData.completion}%`, suffix: 'completed' },
+                { label: '3 Titled Lots', suffix: '', highlight: true }
+              ].map((stat, index) => (
+                <motion.div
+                  key={index}
+                  variants={staggerItem}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className={`${stat.highlight ? 'bg-emerald-500/80' : 'bg-white/20'} backdrop-blur-md rounded-lg px-4 py-2 text-white cursor-default`}
+                >
+                  <span className="font-semibold">{stat.label}</span>
+                  <span className="text-white/80 text-sm ml-1">{stat.suffix}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+            
+            {/* Buttons with hover scale */}
+            <motion.div 
+              className="flex gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+            >
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
               >
-                <Grid3X3 className="w-5 h-5 mr-2" />
-                View Gallery
-              </Button>
+                <Button 
+                  size="lg" 
+                  onClick={() => setShowGallery(true)}
+                  className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white text-lg px-8"
+                >
+                  <Grid3X3 className="w-5 h-5 mr-2" />
+                  View Gallery
+                </Button>
+              </motion.div>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                    Schedule a Tour
-                  </Button>
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                      Schedule a Tour
+                    </Button>
+                  </motion.div>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
@@ -480,57 +648,55 @@ export default function BeachPropertyPage() {
                   </Button>
                 </DialogContent>
               </Dialog>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Key Stats Section */}
       <section className="py-16 bg-gradient-to-b from-white to-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <Card className="border-0 shadow-lg bg-white">
-              <CardContent className="p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-100 to-teal-100 flex items-center justify-center">
-                  <Waves className="w-7 h-7 text-cyan-600" />
-                </div>
-                <div className="text-3xl font-bold text-gray-900">240m</div>
-                <div className="text-sm text-muted-foreground mt-1">White Sand Beach</div>
-              </CardContent>
-            </Card>
-            <Card className="border-0 shadow-lg bg-white">
-              <CardContent className="p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
-                  <HomeIcon className="w-7 h-7 text-amber-600" />
-                </div>
-                <div className="text-3xl font-bold text-gray-900">30</div>
-                <div className="text-sm text-muted-foreground mt-1">Luxury Rooms</div>
-              </CardContent>
-            </Card>
-            <Card className="border-0 shadow-lg bg-white">
-              <CardContent className="p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-emerald-100 to-green-100 flex items-center justify-center">
-                  <TreePalm className="w-7 h-7 text-emerald-600" />
-                </div>
-                <div className="text-3xl font-bold text-gray-900">12.3</div>
-                <div className="text-sm text-muted-foreground mt-1">Hectares Total</div>
-              </CardContent>
-            </Card>
-            <Card className="border-0 shadow-lg bg-white">
-              <CardContent className="p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center">
-                  <Thermometer className="w-7 h-7 text-rose-600" />
-                </div>
-                <div className="text-3xl font-bold text-gray-900">29°C</div>
-                <div className="text-sm text-muted-foreground mt-1">Year-Round Water Temp</div>
-              </CardContent>
-            </Card>
-          </div>
+        <div className="container mx-auto px-4" ref={statsRef}>
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-6"
+            initial="hidden"
+            animate={statsInView ? "visible" : "hidden"}
+            variants={staggerContainer}
+          >
+            {[
+              { icon: Waves, value: "240m", label: "White Sand Beach", color: "cyan" },
+              { icon: HomeIcon, value: "30", label: "Luxury Rooms", color: "amber" },
+              { icon: TreePalm, value: "12.3", label: "Hectares Total", color: "emerald" },
+              { icon: Thermometer, value: "29°C", label: "Year-Round Water Temp", color: "rose" }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                variants={staggerItem}
+                whileHover={{ scale: 1.03, y: -5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Card className="border-0 shadow-lg bg-white h-full">
+                  <CardContent className="p-6 text-center">
+                    <div className={`w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-${stat.color}-100 to-${stat.color === 'cyan' ? 'teal' : stat.color === 'amber' ? 'orange' : stat.color === 'emerald' ? 'green' : 'pink'}-100 flex items-center justify-center`}>
+                      <stat.icon className={`w-7 h-7 text-${stat.color}-600`} />
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
       {/* Governor Endorsement Banner */}
-      <section className="py-8 bg-gradient-to-r from-amber-500 to-orange-500">
+      <motion.section 
+        className="py-8 bg-gradient-to-r from-amber-500 to-orange-500"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-white">
             <Award className="w-10 h-10 flex-shrink-0" />
@@ -538,26 +704,36 @@ export default function BeachPropertyPage() {
               <h3 className="text-xl font-bold">Officially Endorsed by the Provincial Government of Sarangani</h3>
               <p className="text-white/90">Full government support for the project development</p>
             </div>
-            <Button 
-              variant="outline" 
-              className="border-white text-white hover:bg-white/20"
-              onClick={() => {
-                setSelectedDoc(legalDocuments[3])
-                setDocImageIndex(0)
-                setShowDocGallery(true)
-              }}
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
             >
-              <ExternalLink className="w-4 h-4 mr-2" />
-              View Endorsement
-            </Button>
+              <Button 
+                variant="outline" 
+                className="border-white text-white hover:bg-white/20"
+                onClick={() => {
+                  setSelectedDoc(legalDocuments[3])
+                  setDocImageIndex(0)
+                  setShowDocGallery(true)
+                }}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                View Endorsement
+              </Button>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Property Overview */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white" ref={propertyOverviewRef}>
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={propertyOverviewInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
             <Badge variant="outline" className="mb-4">Property Overview</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               A Unique Investment Opportunity
@@ -566,75 +742,67 @@ export default function BeachPropertyPage() {
               Located along the Celebes Sea, the oldest sea in the world, this property offers 
               an unparalleled opportunity for development into a world-class destination.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-2xl">
+            {/* Image fade-in from left */}
+            <motion.div 
+              className="relative h-[400px] rounded-2xl overflow-hidden shadow-2xl"
+              initial="hidden"
+              animate={propertyOverviewInView ? "visible" : "hidden"}
+              variants={fadeInLeft}
+            >
               <Image
                 src="/images/gallery/main-building/front-view.jpeg"
                 alt="Main Building"
                 fill
                 className="object-cover"
               />
-            </div>
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-100 to-teal-100 flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-cyan-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg text-gray-900">Prime Location</h3>
-                  <p className="text-muted-foreground">
-                    Just 50 minutes from General Santos City airport, one of the most modern 
-                    airports in the Philippines. Only 100 nautical miles from Indonesia.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center flex-shrink-0">
-                  <DollarSign className="w-6 h-6 text-amber-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg text-gray-900">Tax Benefits</h3>
-                  <p className="text-muted-foreground">
-                    5-year tax-free period for tourism applications, easily extendable by 
-                    additional 5-year periods. Property classified as Tourism Area.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-100 to-green-100 flex items-center justify-center flex-shrink-0">
-                  <Route className="w-6 h-6 text-emerald-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg text-gray-900">Access Road Ready</h3>
-                  <p className="text-muted-foreground">
-                    1.4km access road officially converted to public domain. All landowners 
-                    have been compensated. Road improvement can start immediately.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center flex-shrink-0">
-                  <Fish className="w-6 h-6 text-rose-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg text-gray-900">Marine Paradise</h3>
-                  <p className="text-muted-foreground">
-                    Huge coral reefs right in front of the beach with beautiful tropical fish 
-                    and marine life. Perfect for diving and snorkeling.
-                  </p>
-                </div>
-              </div>
-            </div>
+            </motion.div>
+            
+            {/* Content fade-in from right */}
+            <motion.div 
+              className="space-y-6"
+              initial="hidden"
+              animate={propertyOverviewInView ? "visible" : "hidden"}
+              variants={fadeInRight}
+            >
+              {[
+                { icon: MapPin, title: "Prime Location", description: "Just 50 minutes from General Santos City airport, one of the most modern airports in the Philippines. Only 100 nautical miles from Indonesia.", color: "cyan" },
+                { icon: DollarSign, title: "Tax Benefits", description: "5-year tax-free period for tourism applications, easily extendable by additional 5-year periods. Property classified as Tourism Area.", color: "amber" },
+                { icon: Route, title: "Access Road Ready", description: "1.4km access road officially converted to public domain. All landowners have been compensated. Road improvement can start immediately.", color: "emerald" },
+                { icon: Fish, title: "Marine Paradise", description: "Huge coral reefs right in front of the beach with beautiful tropical fish and marine life. Perfect for diving and snorkeling.", color: "rose" }
+              ].map((feature, index) => (
+                <motion.div 
+                  key={index}
+                  className="flex items-start gap-4"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={propertyOverviewInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: index * 0.15 + 0.3, duration: 0.5 }}
+                >
+                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-br from-${feature.color}-100 to-${feature.color === 'cyan' ? 'teal' : feature.color === 'amber' ? 'orange' : feature.color === 'emerald' ? 'green' : 'pink'}-100 flex items-center justify-center flex-shrink-0`}>
+                    <feature.icon className={`w-6 h-6 text-${feature.color}-600`} />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg text-gray-900">{feature.title}</h3>
+                    <p className="text-muted-foreground">{feature.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Buildings Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50" ref={buildingsRef}>
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={buildingsInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
             <Badge variant="outline" className="mb-4">Buildings & Facilities</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Spanish Mediterranean Architecture
@@ -643,87 +811,90 @@ export default function BeachPropertyPage() {
               Purpose-built structures designed for luxury living and hospitality, 
               featuring quality construction and elegant design.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <motion.div 
+            className="grid md:grid-cols-2 gap-6"
+            initial="hidden"
+            animate={buildingsInView ? "visible" : "hidden"}
+            variants={staggerContainer}
+          >
             {buildings.map((building, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-white">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-100 to-teal-100 flex items-center justify-center">
-                      <building.icon className="w-7 h-7 text-cyan-600" />
+              <motion.div
+                key={index}
+                variants={scaleIn}
+                whileHover={{ y: -8, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)" }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-white h-full">
+                  <CardHeader>
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-100 to-teal-100 flex items-center justify-center">
+                        <building.icon className="w-7 h-7 text-cyan-600" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">{building.name}</CardTitle>
+                      </div>
                     </div>
-                    <div>
-                      <CardTitle className="text-xl">{building.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-base mb-4">{building.description}</CardDescription>
+                    <div className="flex flex-wrap gap-2">
+                      {building.features.map((feature, i) => (
+                        <Badge key={i} variant="secondary" className="bg-gray-100">
+                          {feature}
+                        </Badge>
+                      ))}
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base mb-4">{building.description}</CardDescription>
-                  <div className="flex flex-wrap gap-2">
-                    {building.features.map((feature, i) => (
-                      <Badge key={i} variant="secondary" className="bg-gray-100">
-                        {feature}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* Main Building Details */}
-          <div className="mt-12 grid md:grid-cols-3 gap-6">
-            <Card className="border-0 shadow-md bg-gradient-to-br from-cyan-50 to-teal-50">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-cyan-500 flex items-center justify-center">
-                    <Music className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900">Discotheque / Bar</h3>
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  Entertainment venue within the main building, perfect for evening entertainment 
-                  and events. Adds significant value for resort operations.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="border-0 shadow-md bg-gradient-to-br from-amber-50 to-orange-50">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center">
-                    <Home className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900">8-Room Private Residence</h3>
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  First floor of main building includes an 8-room private residence with 
-                  surrounding terraces. Perfect for owner&apos;s quarters or VIP accommodation.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="border-0 shadow-md bg-gradient-to-br from-emerald-50 to-green-50">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center">
-                    <Building2 className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900">13m High Atrium</h3>
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  Stunning 13-meter high atrium with full marble tiled lobby creates 
-                  an impressive entrance and grand atmosphere for guests.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+          <motion.div 
+            className="mt-12 grid md:grid-cols-3 gap-6"
+            initial="hidden"
+            animate={buildingsInView ? "visible" : "hidden"}
+            variants={staggerContainer}
+          >
+            {[
+              { icon: Music, title: "Discotheque / Bar", description: "Entertainment venue within the main building, perfect for evening entertainment and events. Adds significant value for resort operations.", bg: "cyan" },
+              { icon: Home, title: "8-Room Private Residence", description: "First floor of main building includes an 8-room private residence with surrounding terraces. Perfect for owner's quarters or VIP accommodation.", bg: "amber" },
+              { icon: Building2, title: "13m High Atrium", description: "Stunning 13-meter high atrium with full marble tiled lobby creates an impressive entrance and grand atmosphere for guests.", bg: "emerald" }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                variants={staggerItem}
+                whileHover={{ y: -5 }}
+              >
+                <Card className={`border-0 shadow-md bg-gradient-to-br from-${item.bg}-50 to-${item.bg === 'cyan' ? 'teal' : item.bg === 'amber' ? 'orange' : 'green'}-50 h-full`}>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`w-10 h-10 rounded-lg bg-${item.bg}-500 flex items-center justify-center`}>
+                        <item.icon className="w-5 h-5 text-white" />
+                      </div>
+                      <h3 className="font-semibold text-gray-900">{item.title}</h3>
+                    </div>
+                    <p className="text-muted-foreground text-sm">{item.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
       {/* Photo Gallery Preview */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white" ref={galleryRef}>
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={galleryInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
             <Badge variant="outline" className="mb-4">Photo Gallery</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Explore the Property
@@ -731,14 +902,22 @@ export default function BeachPropertyPage() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Real photos of the Bilandang Beach Property - aerial views, buildings, facilities, coastal scenery, and marine life.
             </p>
-          </div>
+          </motion.div>
 
           {/* Gallery Grid Preview */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+            initial="hidden"
+            animate={galleryInView ? "visible" : "hidden"}
+            variants={staggerContainer}
+          >
             {allImages.slice(0, 8).map((image, index) => (
-              <div 
+              <motion.div
                 key={index}
-                className="relative aspect-video rounded-lg overflow-hidden cursor-pointer group hover:shadow-xl transition-all"
+                variants={staggerItem}
+                whileHover={{ scale: 1.05, zIndex: 10 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="relative aspect-video rounded-lg overflow-hidden cursor-pointer group hover:shadow-xl transition-shadow"
                 onClick={() => {
                   setCurrentImage(index)
                   setShowGallery(true)
@@ -755,27 +934,42 @@ export default function BeachPropertyPage() {
                     {image.title}
                   </span>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-          <div className="text-center">
-            <Button 
-              size="lg" 
-              onClick={() => setShowGallery(true)}
-              className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white"
+          <motion.div 
+            className="text-center"
+            initial={{ opacity: 0 }}
+            animate={galleryInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.5, duration: 0.5 }}
+          >
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
             >
-              <Grid3X3 className="w-5 h-5 mr-2" />
-              View All {allImages.length} Photos
-            </Button>
-          </div>
+              <Button 
+                size="lg" 
+                onClick={() => setShowGallery(true)}
+                className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white"
+              >
+                <Grid3X3 className="w-5 h-5 mr-2" />
+                View All {allImages.length} Photos
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* Potential Development Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white" ref={potentialRef}>
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={potentialInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
             <Badge variant="outline" className="mb-4 border-cyan-500 text-cyan-600">Vision for the Future</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Development Potential
@@ -784,10 +978,15 @@ export default function BeachPropertyPage() {
               Conceptual renderings showcasing the property&apos;s potential as a world-class beach resort destination. 
               With 80% completion and an estimated $1M USD investment, this paradise can be fully operational within 6-8 months.
             </p>
-          </div>
+          </motion.div>
 
           {/* Featured Large Image */}
-          <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-2xl mb-8">
+          <motion.div 
+            className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-2xl mb-8"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={potentialInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.7 }}
+          >
             <Image
               src={potentialImages[0].src}
               alt={potentialImages[0].alt}
@@ -800,33 +999,50 @@ export default function BeachPropertyPage() {
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{potentialImages[0].title}</h3>
               <p className="text-white/90 text-lg">{potentialImages[0].description}</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Grid of Potential Images */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div 
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+            initial="hidden"
+            animate={potentialInView ? "visible" : "hidden"}
+            variants={staggerContainer}
+          >
             {potentialImages.slice(1).map((image, index) => (
-              <Card key={index} className="border-0 shadow-lg overflow-hidden group hover:shadow-xl transition-all">
-                <div className="relative h-56">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="font-semibold text-white text-lg">{image.title}</h3>
+              <motion.div
+                key={index}
+                variants={staggerItem}
+                whileHover={{ y: -8, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)" }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Card className="border-0 shadow-lg overflow-hidden group hover:shadow-xl transition-all h-full">
+                  <div className="relative h-56">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="font-semibold text-white text-lg">{image.title}</h3>
+                    </div>
                   </div>
-                </div>
-                <CardContent className="p-4">
-                  <p className="text-muted-foreground text-sm">{image.description}</p>
-                </CardContent>
-              </Card>
+                  <CardContent className="p-4">
+                    <p className="text-muted-foreground text-sm">{image.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* Investment Callout */}
-          <div className="mt-12 bg-gradient-to-r from-cyan-50 to-teal-50 rounded-2xl p-8 border border-cyan-100">
+          <motion.div 
+            className="mt-12 bg-gradient-to-r from-cyan-50 to-teal-50 rounded-2xl p-8 border border-cyan-100"
+            initial={{ opacity: 0, y: 30 }}
+            animate={potentialInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.5, duration: 0.6 }}
+          >
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center flex-shrink-0">
@@ -842,10 +1058,15 @@ export default function BeachPropertyPage() {
               <div className="flex gap-3">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white">
-                      <Mail className="w-4 h-4 mr-2" />
-                      Inquire Now
-                    </Button>
+                    <motion.div
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      <Button className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white">
+                        <Mail className="w-4 h-4 mr-2" />
+                        Inquire Now
+                      </Button>
+                    </motion.div>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
@@ -873,24 +1094,34 @@ export default function BeachPropertyPage() {
                     </Button>
                   </DialogContent>
                 </Dialog>
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowGallery(true)}
-                  className="border-cyan-500 text-cyan-600 hover:bg-cyan-50"
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                 >
-                  <Grid3X3 className="w-4 h-4 mr-2" />
-                  Current Photos
-                </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowGallery(true)}
+                    className="border-cyan-500 text-cyan-600 hover:bg-cyan-50"
+                  >
+                    <Grid3X3 className="w-4 h-4 mr-2" />
+                    Current Photos
+                  </Button>
+                </motion.div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Amenities Grid */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50" ref={amenitiesRef}>
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={amenitiesInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
             <Badge variant="outline" className="mb-4">Property Features</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               World-Class Amenities
@@ -898,28 +1129,45 @@ export default function BeachPropertyPage() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Every detail has been carefully planned to create a truly exceptional property.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-6"
+            initial="hidden"
+            animate={amenitiesInView ? "visible" : "hidden"}
+            variants={staggerContainer}
+          >
             {amenities.map((amenity, index) => (
-              <Card key={index} className="border-0 shadow-md hover:shadow-lg transition-all hover:-translate-y-1 bg-white group">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-cyan-50 to-teal-50 flex items-center justify-center group-hover:from-cyan-100 group-hover:to-teal-100 transition-colors">
-                    <amenity.icon className="w-8 h-8 text-cyan-600" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-1">{amenity.label}</h3>
-                  <p className="text-sm text-muted-foreground">{amenity.description}</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                key={index}
+                variants={staggerItem}
+                whileHover={{ y: -5, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Card className="border-0 shadow-md hover:shadow-lg transition-all bg-white group h-full">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-cyan-50 to-teal-50 flex items-center justify-center group-hover:from-cyan-100 group-hover:to-teal-100 transition-colors">
+                      <amenity.icon className="w-8 h-8 text-cyan-600" />
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-1">{amenity.label}</h3>
+                    <p className="text-sm text-muted-foreground">{amenity.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Completion Status */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white" ref={completionRef}>
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={completionInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
             <Badge variant="outline" className="mb-4">Completion Status</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               What&apos;s Done & What Remains
@@ -927,84 +1175,102 @@ export default function BeachPropertyPage() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Full transparency on the property&apos;s completion status. The $1M USD estimate covers all remaining items below.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="max-w-4xl mx-auto">
+          <motion.div 
+            className="max-w-4xl mx-auto"
+            initial="hidden"
+            animate={completionInView ? "visible" : "hidden"}
+            variants={staggerContainer}
+          >
             <div className="grid gap-4">
               {completionItems.map((item, index) => (
-                <Card 
-                  key={index} 
-                  className={`border-0 shadow-md ${
-                    item.status === 'completed' 
-                      ? 'bg-emerald-50' 
-                      : item.status === 'ready' 
-                        ? 'bg-amber-50' 
-                        : 'bg-gray-50'
-                  }`}
+                <motion.div
+                  key={index}
+                  variants={staggerItem}
                 >
-                  <CardContent className="p-4 flex items-center gap-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  <Card 
+                    className={`border-0 shadow-md ${
                       item.status === 'completed' 
-                        ? 'bg-emerald-500' 
+                        ? 'bg-emerald-50' 
                         : item.status === 'ready' 
-                          ? 'bg-amber-500' 
-                          : 'bg-gray-400'
-                    }`}>
-                      {item.status === 'completed' ? (
-                        <CheckCircle2 className="w-5 h-5 text-white" />
-                      ) : item.status === 'ready' ? (
-                        <Clock className="w-5 h-5 text-white" />
-                      ) : (
-                        <Hammer className="w-5 h-5 text-white" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">{item.item}</h3>
-                      <p className="text-sm text-muted-foreground">{item.description}</p>
-                    </div>
-                    <Badge 
-                      variant={item.status === 'completed' ? 'default' : 'outline'}
-                      className={`${
+                          ? 'bg-amber-50' 
+                          : 'bg-gray-50'
+                    }`}
+                  >
+                    <CardContent className="p-4 flex items-center gap-4">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
                         item.status === 'completed' 
-                          ? 'bg-emerald-500 text-white' 
+                          ? 'bg-emerald-500' 
                           : item.status === 'ready' 
-                            ? 'border-amber-500 text-amber-600' 
-                            : 'border-gray-400 text-gray-600'
-                      }`}
-                    >
-                      {item.status === 'completed' ? 'Completed' : item.status === 'ready' ? 'Ready to Start' : 'Pending'}
-                    </Badge>
-                  </CardContent>
-                </Card>
+                            ? 'bg-amber-500' 
+                            : 'bg-gray-400'
+                      }`}>
+                        {item.status === 'completed' ? (
+                          <CheckCircle2 className="w-5 h-5 text-white" />
+                        ) : item.status === 'ready' ? (
+                          <Clock className="w-5 h-5 text-white" />
+                        ) : (
+                          <Hammer className="w-5 h-5 text-white" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900">{item.item}</h3>
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                      </div>
+                      <Badge 
+                        variant={item.status === 'completed' ? 'default' : 'outline'}
+                        className={`${
+                          item.status === 'completed' 
+                            ? 'bg-emerald-500 text-white' 
+                            : item.status === 'ready' 
+                              ? 'border-amber-500 text-amber-600' 
+                              : 'border-gray-400 text-gray-600'
+                        }`}
+                      >
+                        {item.status === 'completed' ? 'Completed' : item.status === 'ready' ? 'Ready to Start' : 'Pending'}
+                      </Badge>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
 
             {/* Water Supply Note */}
-            <Card className="mt-8 border-2 border-cyan-200 bg-cyan-50">
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-cyan-500 flex items-center justify-center flex-shrink-0">
-                    <Droplet className="w-6 h-6 text-white" />
+            <motion.div
+              variants={staggerItem}
+            >
+              <Card className="mt-8 border-2 border-cyan-200 bg-cyan-50">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-cyan-500 flex items-center justify-center flex-shrink-0">
+                      <Droplet className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-2">Water Supply Solution</h3>
+                      <p className="text-muted-foreground">
+                        Potable water supply requires installation of either a <strong>deep well drilling system</strong> or 
+                        a <strong>Reverse Osmosis (RO) saltwater treatment system</strong>. Both are proven, reliable solutions 
+                        for beach properties in the region. Cost estimates for either system are included in the $1M completion budget.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Water Supply Solution</h3>
-                    <p className="text-muted-foreground">
-                      Potable water supply requires installation of either a <strong>deep well drilling system</strong> or 
-                      a <strong>Reverse Osmosis (RO) saltwater treatment system</strong>. Both are proven, reliable solutions 
-                      for beach properties in the region. Cost estimates for either system are included in the $1M completion budget.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* Possible Uses */}
-      <section className="py-20 bg-gradient-to-br from-cyan-900 to-teal-900 text-white">
+      <section className="py-20 bg-gradient-to-br from-cyan-900 to-teal-900 text-white" ref={possibleUsesRef}>
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={possibleUsesInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
             <Badge variant="outline" className="mb-4 border-white/30 text-white bg-white/10">
               Possibilities
             </Badge>
@@ -1014,28 +1280,45 @@ export default function BeachPropertyPage() {
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
               The property&apos;s unique size and location make it suitable for a wide variety of purposes.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-4"
+            initial="hidden"
+            animate={possibleUsesInView ? "visible" : "hidden"}
+            variants={staggerContainer}
+          >
             {possibleUses.map((use, index) => (
-              <Card key={index} className="border-0 bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all cursor-pointer group">
-                <CardContent className="p-6 text-center">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                    <use.icon className="w-7 h-7 text-cyan-300" />
-                  </div>
-                  <h3 className="font-semibold text-white mb-1">{use.title}</h3>
-                  <p className="text-sm text-white/70">{use.description}</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                key={index}
+                variants={staggerItem}
+                whileHover={{ scale: 1.03, y: -5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Card className="border-0 bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all cursor-pointer group h-full">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                      <use.icon className="w-7 h-7 text-cyan-300" />
+                    </div>
+                    <h3 className="font-semibold text-white mb-1">{use.title}</h3>
+                    <p className="text-sm text-white/70">{use.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Legal & Documentation */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white" ref={legalRef}>
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={legalInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
             <Badge variant="outline" className="mb-4">Legal & Documentation</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Complete Legal Documentation
@@ -1043,86 +1326,83 @@ export default function BeachPropertyPage() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               All documents are in order. The property is properly titled, government-endorsed, and environmentally compliant.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="max-w-4xl mx-auto">
+          <motion.div 
+            className="max-w-4xl mx-auto"
+            initial="hidden"
+            animate={legalInView ? "visible" : "hidden"}
+            variants={staggerContainer}
+          >
             {/* Key Legal Highlights */}
             <div className="grid md:grid-cols-3 gap-4 mb-8">
-              <Card className="border-0 shadow-lg bg-gradient-to-br from-emerald-50 to-green-50">
-                <CardContent className="p-6 text-center">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-emerald-500 flex items-center justify-center">
-                    <Scale className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">3 Titled Lots</h3>
-                  <p className="text-sm text-muted-foreground">
-                    T-9144, T-9145, T-9146<br />
-                    All properly titled and registered
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="border-0 shadow-lg bg-gradient-to-br from-amber-50 to-orange-50">
-                <CardContent className="p-6 text-center">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-amber-500 flex items-center justify-center">
-                    <Award className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Governor Endorsed</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Official endorsement from<br />
-                    Provincial Government of Sarangani
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="border-0 shadow-lg bg-gradient-to-br from-cyan-50 to-teal-50">
-                <CardContent className="p-6 text-center">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-cyan-500 flex items-center justify-center">
-                    <FileText className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">ECC Certified</h3>
-                  <p className="text-sm text-muted-foreground">
-                    ECC-XI-99-192<br />
-                    Environmental Compliance Certificate
-                  </p>
-                </CardContent>
-              </Card>
+              {[
+                { icon: Scale, title: "3 Titled Lots", description: "T-9144, T-9145, T-9146\nAll properly titled and registered", color: "emerald" },
+                { icon: Award, title: "Governor Endorsed", description: "Official endorsement from\nProvincial Government of Sarangani", color: "amber" },
+                { icon: FileText, title: "ECC Certified", description: "ECC-XI-99-192\nEnvironmental Compliance Certificate", color: "cyan" }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  variants={staggerItem}
+                  whileHover={{ y: -5 }}
+                >
+                  <Card className={`border-0 shadow-lg bg-gradient-to-br from-${item.color}-50 to-${item.color === 'cyan' ? 'teal' : item.color === 'amber' ? 'orange' : 'green'}-50 h-full`}>
+                    <CardContent className="p-6 text-center">
+                      <div className={`w-14 h-14 mx-auto mb-4 rounded-full bg-${item.color}-500 flex items-center justify-center`}>
+                        <item.icon className="w-7 h-7 text-white" />
+                      </div>
+                      <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground whitespace-pre-line">{item.description}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
             </div>
 
             {/* Documents List */}
-            <Accordion type="single" collapsible className="w-full">
-              {legalDocuments.map((doc, index) => (
-                <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger className="hover:bg-gray-50 px-4 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Badge variant="outline" className="bg-cyan-50 text-cyan-700 border-cyan-200">
-                        {doc.type}
-                      </Badge>
-                      <span className="font-medium text-left">{doc.title}</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-4 pb-4">
-                    <p className="text-muted-foreground mb-4">{doc.description}</p>
-                    <Button 
-                      onClick={() => {
-                        setSelectedDoc(doc)
-                        setDocImageIndex(0)
-                        setShowDocGallery(true)
-                      }}
-                      className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View Document ({doc.images.length} {doc.images.length > 1 ? 'pages' : 'page'})
-                    </Button>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+            <motion.div variants={staggerItem}>
+              <Accordion type="single" collapsible className="w-full">
+                {legalDocuments.map((doc, index) => (
+                  <AccordionItem key={index} value={`item-${index}`}>
+                    <AccordionTrigger className="hover:bg-gray-50 px-4 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="outline" className="bg-cyan-50 text-cyan-700 border-cyan-200">
+                          {doc.type}
+                        </Badge>
+                        <span className="font-medium text-left">{doc.title}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-4 pb-4">
+                      <p className="text-muted-foreground mb-4">{doc.description}</p>
+                      <Button 
+                        onClick={() => {
+                          setSelectedDoc(doc)
+                          setDocImageIndex(0)
+                          setShowDocGallery(true)
+                        }}
+                        className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        View Document ({doc.images.length} {doc.images.length > 1 ? 'pages' : 'page'})
+                      </Button>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50" ref={pricingRef}>
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+          <motion.div 
+            className="max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 30 }}
+            animate={pricingInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
             <Card className="border-0 shadow-2xl overflow-hidden">
               <div className="bg-gradient-to-r from-cyan-500 to-teal-500 p-8 text-white text-center">
                 <h2 className="text-2xl font-bold mb-2">Investment Details</h2>
@@ -1152,49 +1432,45 @@ export default function BeachPropertyPage() {
                 </div>
                 <Separator className="my-6" />
                 <div className="grid md:grid-cols-2 gap-6 text-sm">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                      <Shield className="w-5 h-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-gray-900">Properly Titled</div>
-                      <div className="text-muted-foreground">Three lots with clear titles (T-9144, T-9145, T-9146)</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                      <Award className="w-5 h-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-gray-900">SEC Registered</div>
-                      <div className="text-muted-foreground">JOBELENT RESORT DEVELOPMENT CORP.</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                      <TreePalm className="w-5 h-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-gray-900">Environmental Compliance</div>
-                      <div className="text-muted-foreground">ECC-XI-99-192 certified</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                      <DollarSign className="w-5 h-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-gray-900">Tax Incentives</div>
-                      <div className="text-muted-foreground">5-year tax holiday + Tourism Area classification</div>
-                    </div>
-                  </div>
+                  {[
+                    { icon: Shield, title: "Properly Titled", description: "Three lots with clear titles (T-9144, T-9145, T-9146)" },
+                    { icon: Award, title: "SEC Registered", description: "JOBELENT RESORT DEVELOPMENT CORP." },
+                    { icon: TreePalm, title: "Environmental Compliance", description: "ECC-XI-99-192 certified" },
+                    { icon: DollarSign, title: "Tax Incentives", description: "5-year tax holiday + Tourism Area classification" }
+                  ].map((item, index) => (
+                    <motion.div 
+                      key={index}
+                      className="flex items-center gap-3"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={pricingInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ delay: index * 0.1 + 0.3, duration: 0.5 }}
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
+                        <item.icon className="w-5 h-5 text-emerald-600" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900">{item.title}</div>
+                        <div className="text-muted-foreground">{item.description}</div>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
-                <div className="mt-8 text-center">
+                <motion.div 
+                  className="mt-8 text-center"
+                  initial={{ opacity: 0 }}
+                  animate={pricingInView ? { opacity: 1 } : {}}
+                  transition={{ delay: 0.6, duration: 0.5 }}
+                >
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white text-lg px-12">
-                        Request Full Details
-                      </Button>
+                      <motion.div
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                      >
+                        <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white text-lg px-12">
+                          Request Full Details
+                        </Button>
+                      </motion.div>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                       <DialogHeader>
@@ -1222,18 +1498,22 @@ export default function BeachPropertyPage() {
                       </Button>
                     </DialogContent>
                   </Dialog>
-                </div>
+                </motion.div>
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Location Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white" ref={locationRef}>
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={locationInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6 }}
+            >
               <Badge variant="outline" className="mb-4">Location</Badge>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                 Sarangani Province, Philippines
@@ -1245,37 +1525,36 @@ export default function BeachPropertyPage() {
                   landscape in the most southern part of the Philippines.
                 </p>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-cyan-100 flex items-center justify-center">
-                      <Compass className="w-5 h-5 text-cyan-600" />
-                    </div>
-                    <div>
-                      <span className="font-medium text-gray-900">50 minutes</span>
-                      <span className="text-muted-foreground"> from General Santos City Airport</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                      <Anchor className="w-5 h-5 text-amber-600" />
-                    </div>
-                    <div>
-                      <span className="font-medium text-gray-900">100 nautical miles</span>
-                      <span className="text-muted-foreground"> from Indonesia</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                      <Fish className="w-5 h-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <span className="font-medium text-gray-900">Largest fish port</span>
-                      <span className="text-muted-foreground"> in the Philippines nearby</span>
-                    </div>
-                  </div>
+                  {[
+                    { icon: Compass, text: "50 minutes from General Santos City Airport", color: "cyan" },
+                    { icon: Anchor, text: "100 nautical miles from Indonesia", color: "amber" },
+                    { icon: Fish, text: "Largest fish port in the Philippines nearby", color: "emerald" }
+                  ].map((item, index) => (
+                    <motion.div 
+                      key={index}
+                      className="flex items-center gap-3"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={locationInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ delay: index * 0.15 + 0.3, duration: 0.5 }}
+                    >
+                      <div className={`w-10 h-10 rounded-lg bg-${item.color}-100 flex items-center justify-center`}>
+                        <item.icon className={`w-5 h-5 text-${item.color}-600`} />
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-900">{item.text.split(' ')[0]}</span>
+                        <span className="text-muted-foreground"> {item.text.split(' ').slice(1).join(' ')}</span>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
-            </div>
-            <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-2xl">
+            </motion.div>
+            <motion.div 
+              className="relative h-[400px] rounded-2xl overflow-hidden shadow-2xl"
+              initial={{ opacity: 0, x: 30 }}
+              animate={locationInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6 }}
+            >
               <Image
                 src="/images/gallery/aerial/aerial-view-2.jpeg"
                 alt="Aerial view of property location"
@@ -1289,27 +1568,56 @@ export default function BeachPropertyPage() {
                   Bilandang, Brgy. Taluya, Glan
                 </Badge>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-cyan-500 to-teal-500">
+      <motion.section 
+        className="py-20 bg-gradient-to-r from-cyan-500 to-teal-500"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold text-white mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1, duration: 0.5 }}
+          >
             Ready to Make This Paradise Yours?
-          </h2>
-          <p className="text-lg text-white/90 max-w-2xl mx-auto mb-8">
+          </motion.h2>
+          <motion.p 
+            className="text-lg text-white/90 max-w-2xl mx-auto mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
             Contact us today to schedule a viewing or learn more about this exceptional investment opportunity.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          </motion.p>
+          <motion.div 
+            className="flex flex-wrap justify-center gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
             <Dialog>
               <DialogTrigger asChild>
-                <Button size="lg" className="bg-white text-cyan-600 hover:bg-gray-100 text-lg px-8">
-                  <Mail className="w-5 h-5 mr-2" />
-                  Contact Us
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  <Button size="lg" className="bg-white text-cyan-600 hover:bg-gray-100 text-lg px-8">
+                    <Mail className="w-5 h-5 mr-2" />
+                    Contact Us
+                  </Button>
+                </motion.div>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -1341,21 +1649,31 @@ export default function BeachPropertyPage() {
                 </Button>
               </DialogContent>
             </Dialog>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 text-lg px-8">
-              <Phone className="w-5 h-5 mr-2" />
-              Call Now
-            </Button>
-          </div>
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 text-lg px-8">
+                <Phone className="w-5 h-5 mr-2" />
+                Call Now
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* MHD Section */}
-      <section className="py-20 bg-white">
+      {/* MHD Section - Contact Section */}
+      <section className="py-20 bg-white" ref={contactRef}>
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
-              {/* MHD Logo */}
-              <div className="flex justify-center">
+              {/* MHD Logo - Fade in */}
+              <motion.div 
+                className="flex justify-center"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={contactInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.6 }}
+              >
                 <div className="relative w-64 h-64 md:w-80 md:h-80">
                   <Image
                     src="/images/mhd-logo.png"
@@ -1364,10 +1682,14 @@ export default function BeachPropertyPage() {
                     className="object-contain"
                   />
                 </div>
-              </div>
+              </motion.div>
 
-              {/* MHD Info */}
-              <div>
+              {/* MHD Info - Slide in from right */}
+              <motion.div
+                initial={{ opacity: 0, x: 40 }}
+                animate={contactInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
                 <Badge variant="outline" className="mb-4 border-cyan-500 text-cyan-600">Contact Person</Badge>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                   MHD Design-Build
@@ -1377,7 +1699,12 @@ export default function BeachPropertyPage() {
                   specializing in <strong>Design-Build by Administration</strong> services. We bring decades 
                   of expertise in creating exceptional properties that stand the test of time.
                 </p>
-                <div className="bg-gradient-to-r from-cyan-50 to-teal-50 rounded-xl p-6 border border-cyan-100">
+                <motion.div 
+                  className="bg-gradient-to-r from-cyan-50 to-teal-50 rounded-xl p-6 border border-cyan-100"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={contactInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                >
                   <h3 className="font-semibold text-gray-900 mb-3">Our Legacy</h3>
                   <p className="text-muted-foreground text-sm mb-4">
                     In 1997, MHD completed the Design-Build by Administration of this Bilandang Beach Property, 
@@ -1385,17 +1712,23 @@ export default function BeachPropertyPage() {
                     essence of tropical paradise living.
                   </p>
                   <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-2">
+                    <motion.div 
+                      className="flex items-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                    >
                       <Phone className="w-4 h-4 text-cyan-600" />
                       <span className="font-medium">+63 997 175 9641</span>
-                    </div>
-                    <div className="flex items-center gap-2">
+                    </motion.div>
+                    <motion.div 
+                      className="flex items-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                    >
                       <Mail className="w-4 h-4 text-cyan-600" />
                       <span className="font-medium">mhd.architect2020@gmail.com</span>
-                    </div>
+                    </motion.div>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -1645,7 +1978,7 @@ export default function BeachPropertyPage() {
                 <button
                   key={index}
                   onClick={() => setDocImageIndex(index)}
-                  className={`relative w-20 h-14 flex-shrink-0 rounded-lg overflow-hidden transition-all ${
+                  className={`relative w-16 h-20 flex-shrink-0 rounded-lg overflow-hidden transition-all ${
                     docImageIndex === index 
                       ? 'ring-2 ring-cyan-500 ring-offset-2 ring-offset-black' 
                       : 'opacity-50 hover:opacity-100'
